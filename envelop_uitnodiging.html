@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Uitnodiging • Esra & Nurullah</title>
+  <meta name="theme-color" content="#f5efe4">
+  <style>
+    :root {
+      --bg: #f5efe4;
+      --paper: #fff8ee;
+      --env: #e7d7c9;
+      --env-dark: #cdb7a6;
+      --text: #3e2e23;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    }
+
+    .wrap {
+      min-height: 100%;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .hint {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 14px;
+      opacity: .7;
+      user-select: none;
+    }
+
+    /* Envelope */
+    .env-scene {
+      width: min(420px, 90vw);
+      height: min(300px, 64vw);
+      position: relative;
+      perspective: 1200px;
+      cursor: pointer;
+      transition: transform .4s ease;
+    }
+    .env { 
+      width: 100%; height: 100%;
+      position: absolute; inset: 0;
+      transform-style: preserve-3d;
+    }
+    .env .back, .env .front, .env .flap, .env .letter {
+      position: absolute; inset: 0; border-radius: 16px;
+    }
+    .env .back {
+      background: linear-gradient(180deg, var(--env) 0%, var(--env-dark) 100%);
+      box-shadow: 0 20px 40px rgba(0,0,0,.15);
+    }
+    .env .front {
+      background: linear-gradient(180deg, var(--env-dark), var(--env));
+      clip-path: polygon(0% 100%, 50% 50%, 100% 100%);
+      height: 60%;
+      bottom: 0; top: auto;
+      border-bottom-left-radius: 16px;
+      border-bottom-right-radius: 16px;
+    }
+    .env .flap {
+      background: linear-gradient(180deg, #f1e5d7, var(--env));
+      clip-path: polygon(0% 0%, 100% 0%, 50% 60%);
+      transform-origin: top center;
+      transition: transform .9s cubic-bezier(.2,.8,.2,1);
+      border-top-left-radius: 16px;
+      border-top-right-radius: 16px;
+      box-shadow: 0 6px 14px rgba(0,0,0,.12) inset;
+    }
+    .env .letter {
+      background: var(--paper);
+      width: 92%; height: 92%;
+      left: 4%; top: 4%;
+      border-radius: 12px;
+      transform: translateZ(1px);
+      overflow: hidden;
+      display: grid; place-items: center;
+      transition: transform .9s cubic-bezier(.2,.8,.2,1);
+    }
+    .env .seal {
+      position: absolute;
+      width: 58px; height: 58px;
+      background: #b48a68;
+      border-radius: 50%;
+      bottom: 22%;
+      left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 6px 12px rgba(0,0,0,.15);
+      display: grid; place-items: center;
+      color: #fff;
+      font-weight: 700;
+      letter-spacing: .08em;
+    }
+
+    .tap {
+      position: absolute; inset: 0;
+      display: grid; place-items: center;
+      color: #583f2e; font-weight: 600;
+      pointer-events: none;
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: .55; transform: translateY(0); }
+      50% { opacity: 1; transform: translateY(-2px); }
+    }
+
+    .env-scene.open .flap { transform: rotateX(160deg); }
+    .env-scene.open .letter { transform: translateY(-60%) translateZ(8px); }
+
+    /* Reveal stage */
+    .reveal {
+      display: none;
+      width: min(720px, 94vw);
+      max-height: 90vh;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 24px 56px rgba(0,0,0,.18);
+      background: #000;
+    }
+    .reveal img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .show { display: block; }
+    .hide { display: none; }
+
+    .btns {
+      margin-top: 14px;
+      display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+    }
+    button {
+      border: 0; border-radius: 999px; padding: 12px 18px;
+      background: #3b2b20; color: #fff; font-weight: 600; cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0,0,0,.12);
+    }
+    button:active { transform: translateY(1px); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div id="envelope" class="env-scene" aria-label="Tik om te openen">
+      <div class="env">
+        <div class="back"></div>
+        <div class="letter">
+          <div style="font-weight:700; font-size:20px; opacity:.6">Uitnodiging</div>
+        </div>
+        <div class="flap"></div>
+        <div class="front"></div>
+        <div class="seal">♡</div>
+      </div>
+      <div class="tap">Tik / Klik om te openen</div>
+    </div>
+
+    <figure id="reveal" class="reveal" aria-label="Uitnodiging afbeelding">
+      <img src="Beige Bruin Esthetische Aquarel Bruiloft Uitnodiging.png" alt="Uitnodiging"/>
+    </figure>
+
+    <div id="actions" class="btns hide">
+      <button id="fullBtn" type="button">Volledig scherm</button>
+      <button id="backBtn" type="button">Terug naar envelop</button>
+    </div>
+
+    <div class="hint">Deel deze pagina via WhatsApp door de link te sturen.</div>
+  </div>
+
+<script>
+  const env = document.getElementById('envelope');
+  const reveal = document.getElementById('reveal');
+  const actions = document.getElementById('actions');
+  const fullBtn = document.getElementById('fullBtn');
+  const backBtn = document.getElementById('backBtn');
+
+  let opened = false;
+  env.addEventListener('click', () => {
+    if (opened) return;
+    env.classLis
